@@ -1,0 +1,105 @@
+/*
+ * Project: Automated Variable-Area Pintle Actuation System
+ * Controller: ESP32 Dev Module
+ * Actuator: NEMA 17 Stepper Motor via A4988 / TMC2209 Driver
+ * Purpose: Precision stroke positioning for optical flow-cell pintle needle
+ */
+
+#include <Arduino.h>
+
+// Pin Configuration
+const int PIN_STEP = 18;      // Pulse pin for stepper driver
+const int PIN_DIR  = 19;      // Direction pin
+const int PIN_EN   = 21;      // Driver Enable pin (Active LOW)
+const int PIN_LIMIT_HOME = 4; // Home position microswitch (Active LOW)
+
+// Mechanical & Stepper Parameters
+const float LEAD_PITCH_MM = 2.0;       // Lead screw pitch (2mm per full rotation)
+const int STEPS_PER_REV   = 200;       // Standard 1.8 degree stepper
+const int MICROSTEP_DIV   = 16;        // 1/16 microstepping mode
+const float STEPS_PER_MM  = (STEPS_PER_REV * MICROSTEP_DIV) / LEAD_PITCH_MM; // 1600 steps/mm
+
+// System Variables
+long currentStepPos = 0;
+float currentPositionMM = 0.0;
+
+void stepMotor(int steps, bool dir, int stepDelayUs = 600) {
+  digitalWrite(PIN_DIR, dir ? HIGH : LOW);
+  for (int i = 0; i < steps; i++) {
+    digitalWrite(PIN_STEP, HIGH);
+    delayMicroseconds(stepDelayUs);
+    digitalWrite(PIN_STEP, LOW);
+    delayMicroseconds(stepDelayUs);
+  }
+}
+
+void homeActuator() {
+  Serial.println("[HOMING] Moving needle to optical zero datum...");
+  digitalWrite(PIN_EN, LOW); // Enable driver
+  
+  // Reverse direction until limit switch triggers
+  digitalWrite(PIN_DIR, LOW);
+  while (digitalRead(PIN_LIMIT_HOME) == HIGH) {
+    digitalWrite(PIN_STEP, HIGH);
+    delayMicroseconds(1000);
+    digitalWrite(PIN_STEP, LOW);
+    delayMicroseconds(1000);
+  }
+  
+  // Retract slightly to clear switch
+  stepMotor(200, true, 800);
+  currentStepPos = 0;
+  currentPositionMM = 0.0;
+  Serial.println("[HOMING] Actuator calibrated to 0.00 mm (Closed Position)");
+}
+
+void moveToStroke(float targetMM) {
+  // Mechanical boundary protection (e.g., Max Stroke 20mm)
+  if (targetMM < 0.0 || targetMM > 20.0) {
+    Serial.println("[ERROR] Commanded stroke exceeds mechanical boundaries (0 to 20mm)");
+    return;
+  }
+
+  long targetSteps = (long)(targetMM * STEPS_PER_MM);
+  long stepsToMove = targetSteps - currentStepPos;
+  bool dir = stepsToMove > 0;
+
+  Serial.printf("[MOVE] Setting stroke to %.2f mm (%ld steps)\n", targetMM, abs(stepsToMove));
+  stepMotor(abs(stepsToMove), dir);
+  
+  currentStepPos = targetSteps;
+  currentPositionMM = targetMM;
+  Serial.printf("[STATUS] Position verified: %.2f mm\n", currentPositionMM);
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(PIN_STEP, OUTPUT);
+  pinMode(PIN_DIR, OUTPUT);
+  pinMode(PIN_EN, OUTPUT);
+  pinMode(PIN_LIMIT_HOME, INPUT_PULLUP);
+
+  digitalWrite(PIN_EN, HIGH); // Keep motor disabled during boot
+  delay(1000);
+
+  Serial.println("==================================================");
+  Serial.println(" ESP32 Pintle Stroke Actuator Controller Online   ");
+  Serial.println(" Commands: 'HOME', or enter stroke in mm (e.g. 5.5)");
+  Serial.println("==================================================");
+
+  homeActuator();
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n');
+    input.trim();
+
+    if (input.equalsIgnoreCase("HOME")) {
+      homeActuator();
+    } else if (input.length() > 0) {
+      float commandedPosition = input.toFloat();
+      moveToStroke(commandedPosition);
+    }
+  }
+}
