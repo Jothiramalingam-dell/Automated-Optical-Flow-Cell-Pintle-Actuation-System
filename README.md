@@ -55,3 +55,18 @@ Flow + Pressure Sensors
 Feedback
        ↓
 Controller
+
+Key Features
+Variable-area pintle-based flow control
+Closed-loop control architecture
+Real-time flow measurement
+Upstream and downstream pressure monitoring
+Differential-pressure calculation
+Throttle control from 100% to 40% as a prototype target
+Real-time cavitation-risk monitoring
+Emergency-stop functionality
+Simulation mode for development and testing
+Live telemetry visualization
+Data logging and CSV export
+Dashboard-based monitoring
+Future ESP32 and Firebase integration
