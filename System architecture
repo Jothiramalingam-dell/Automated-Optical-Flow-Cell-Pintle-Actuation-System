@@ -1,0 +1,51 @@
+The prototype consists of five major layers:
+
+1. Mechanical Layer
+Pintle valve body
+Pintle/needle
+Linear guide mechanism
+Lead screw
+Actuator
+Sealing elements
+Flow tubing and fittings
+
+2. Sensing Layer
+Flow sensor
+Upstream pressure sensor
+Downstream pressure sensor
+Optional temperature sensor
+Optional vibration/acoustic sensing for future research
+
+3. Control Layer
+ESP32 or equivalent microcontroller
+PID/feedback control
+Actuator control
+Throttle-position management
+Emergency-stop logic
+
+4. Data Layer
+
+The system can record:
+
+Timestamp
+Target throttle
+Actual flow
+Pintle position
+Upstream pressure (P1)
+Downstream pressure (P2)
+Differential pressure (ΔP)
+Risk indicator
+System status
+
+5. Visualization Layer
+
+A web-based dashboard is used to display:
+
+Target vs. actual flow
+Pintle position
+Pressure measurements
+Differential pressure
+Cavitation-risk indicator
+System health
+Live system status
+Experimental data
