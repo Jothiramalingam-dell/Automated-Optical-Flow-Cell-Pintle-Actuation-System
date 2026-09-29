@@ -1,0 +1,34 @@
+Current Scope
+
+Laboratory-scale pintle valve
+Water-based flow loop
+Closed-loop control
+Flow and pressure sensing
+Simulation dashboard
+Data logging
+Cavitation-risk monitoring concept
+
+
+Future Scope
+
+Improved valve geometry
+Higher-accuracy sensors
+Advanced control algorithms
+Experimental cavitation detection using vibration/acoustic signals
+Hardware-to-cloud telemetry
+Digital-twin development
+CFD-based validation
+More advanced risk prediction models
+Hardware-in-the-loop testing
+
+
+Limitations
+
+This project is a research prototype and has several limitations:
+
+It does not replicate cryogenic fluid behaviour.
+It does not reproduce rocket combustion.
+It does not represent a flight-qualified propulsion component.
+The prototype throttle range is limited by laboratory hardware.
+Cavitation-risk estimation initially depends on measured flow and pressure parameters.
+Experimental results must be obtained through physical testing and are not assumed in advance.
