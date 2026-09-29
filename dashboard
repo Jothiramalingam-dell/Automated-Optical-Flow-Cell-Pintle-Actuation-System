@@ -1,0 +1,51 @@
+The project includes a monitoring dashboard designed for real-time visualization of the smart pintle control system.
+
+The dashboard provides:
+
+System status
+Live clock
+Target throttle control
+Actual flow monitoring
+Pintle position
+Pressure monitoring
+Differential pressure
+Cavitation-risk indication
+System health
+Data logging
+CSV export
+
+The dashboard is initially designed to work with simulated data and can later be connected to physical hardware.
+
+  Hardware-to-Dashboard Data Flow
+
+The planned system architecture is:
+
+  Physical Sensors
+      ↓
+ESP32 / Microcontroller
+      ↓
+Telemetry Data
+      ↓
+Firebase / Communication Layer
+      ↓
+Web Dashboard
+      ↓
+Real-Time Monitoring
+
+  Simulation Mode
+
+Before connecting physical hardware, the dashboard can operate in Simulation Mode.
+
+Simulation Mode allows development and testing of:
+
+Throttle commands
+Flow response
+Pintle position
+Pressure variation
+Risk indicators
+Control logic
+Data visualization
+
+This reduces dependence on physical hardware during early software development.
+
+  
