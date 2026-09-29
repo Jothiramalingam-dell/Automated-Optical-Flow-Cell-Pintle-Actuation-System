@@ -1,0 +1,21 @@
+Hardware
+ESP32 / STM32
+Stepper motor or servo actuator
+Flow sensor
+Pressure sensors
+Water pump
+Reservoir
+Pintle valve assembly
+
+Software
+React
+TypeScript
+Tailwind CSS
+Recharts
+Lucide Icons
+Vite
+
+Backend / Connectivity
+Firebase
+Real-time telemetry
+Future ESP32 communication
